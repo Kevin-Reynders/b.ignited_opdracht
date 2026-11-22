@@ -1,0 +1,21 @@
+{
+  "name": "b.ignited_opdracht",
+  "version": "1.0.0",
+  "description": "Opdracht b.ignited",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kevin-Reynders/b.ignited_opdracht.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Kevin-Reynders/b.ignited_opdracht/issues"
+  },
+  "homepage": "https://github.com/Kevin-Reynders/b.ignited_opdracht#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^26.6.6"
+  }
+}
