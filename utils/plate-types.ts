@@ -1,5 +1,5 @@
 //Calling this platetypes instead of dealers since it sounds nicer and is more understandable then dealer
-export const plateTypes = {
+export const PlateType = {
     //Years
     Y1971_1973: '1971-1973',
     Y1973_2008: '1973-2008',
@@ -20,6 +20,6 @@ export const plateTypes = {
     TEST_VEHICLE: 'test vehicle',
 } as const;
 
-export type PlateType = (typeof plateTypes)[keyof typeof plateTypes];
+export type PlateType = (typeof PlateType)[keyof typeof PlateType];
 
-//export const ALL_PLATE_TYPES: Object.values(plateTypes);
+export const ALL_PLATE_TYPES = Object.values(PlateType);
