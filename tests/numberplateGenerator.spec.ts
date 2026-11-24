@@ -32,7 +32,7 @@ test.describe('Belgian Numberplate Generator Positive Scenarios', () => {
         expect(generatedNumberplates).toHaveLength(1);
         const generatedNumberplate = generatedNumberplates[0];
         expect(generatedNumberplate).not.toBeNull();
-        expect(generatedNumberplate).toMatch(/^[0-9][-][A-Z]{3}[-][0-9]{3}$/); // Example standard numberplate format: 1-ABC-123
+        expect(generatedNumberplate).toMatch(/^[0-7][-][A-Z]{3}[-][0-9]{3}$/); // Example standard numberplate format: 1-ABC-123
         console.log(`Generated numberplate: ${generatedNumberplate}`);
     });
 
@@ -48,7 +48,7 @@ test.describe('Belgian Numberplate Generator Positive Scenarios', () => {
             await testdataGeneratorPage.generateNumberplate();
 
             await expect(plate).toHaveCount(1); // Ensure only one numberplate is generated at a time
-            await expect(plate).toHaveText(/^[0-9][-][A-Z]{3}[-][0-9]{3}$/); 
+            await expect(plate).toHaveText(/^[0-7][-][A-Z]{3}[-][0-9]{3}$/); 
 
             if (previous) {
                 await expect(plate).not.toHaveText(previous); // Check for uniqueness against previous numberplate
@@ -80,7 +80,7 @@ test.describe('Belgian Numberplate Generator Positive Scenarios', () => {
 
         for (let i = 0; i < total; i++) {
             expect(generatedNumberplates[i]).not.toBeNull();
-            expect(generatedNumberplates[i]).toMatch(/^[0-9][-][A-Z]{3}[-][0-9]{3}$/);
+            expect(generatedNumberplates[i]).toMatch(/^[0-7][-][A-Z]{3}[-][0-9]{3}$/);
         }
         // Check for uniqueness
         const uniqueNumberplates = new Set(generatedNumberplates);
