@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { TestdataGeneratorPage } from '../pages/TestdataGeneratorPage';
-import { plateTypes } from '../utils/plate-types';
+import { PlateType } from '../utils/plate-types';
+import { PlateFormat } from '../utils/plate-format';
 
 test.describe('Belgian Numberplate Generator Positive Scenarios', () => {
     let testdataGeneratorPage: TestdataGeneratorPage;
@@ -33,6 +34,7 @@ test.describe('Belgian Numberplate Generator Positive Scenarios', () => {
         const generatedNumberplate = generatedNumberplates[0];
         expect(generatedNumberplate).not.toBeNull();
         expect(generatedNumberplate).toMatch(/^[0-7][-][A-Z]{3}[-][0-9]{3}$/); // Example standard numberplate format: 1-ABC-123
+        //expect(generatedNumberplate).toMatch(PlateFormat['2010-present']); Using the regex directly for now
         console.log(`Generated numberplate: ${generatedNumberplate}`);
     });
 
@@ -80,7 +82,7 @@ test.describe('Belgian Numberplate Generator Positive Scenarios', () => {
 
         for (let i = 0; i < total; i++) {
             expect(generatedNumberplates[i]).not.toBeNull();
-            expect(generatedNumberplates[i]).toMatch(/^[0-7][-][A-Z]{3}[-][0-9]{3}$/);
+            expect(generatedNumberplates[i]).toMatch(PlateFormat['2010-present']); // Check against the expected format for current numberplates
         }
         // Check for uniqueness
         const uniqueNumberplates = new Set(generatedNumberplates);
@@ -89,14 +91,15 @@ test.describe('Belgian Numberplate Generator Positive Scenarios', () => {
 
     test('Generate a diplomatic numberplate', async () => {
         await expect(testdataGeneratorPage.generateDealer).toBeVisible();
-        await testdataGeneratorPage.selectPlateType(plateTypes.DIPLOMAT);
+        await testdataGeneratorPage.selectPlateType(PlateType.DIPLOMAT);
         await testdataGeneratorPage.generateNumberplate();
         await expect(testdataGeneratorPage.generatedData).toBeVisible();
         const generatedNumberplates = await testdataGeneratorPage.getGeneratedData();
         expect(generatedNumberplates).toHaveLength(1);
         const generatedNumberplate = generatedNumberplates[0];
         expect(generatedNumberplate).not.toBeNull();
-        expect(generatedNumberplate).toMatch(/^[C][D][-][A-Z]{2}[0-9]{3}$/);
+        expect(generatedNumberplate).toMatch(PlateFormat.diplomat); // Check against the expected format for diplomatic plates
+        //expect(generatedNumberplate).toMatch(/^[C][D][-][A-Z]{2}[0-9]{3}$/);
         console.log(`Generated diplomatic numberplate: ${generatedNumberplate}`);
         });
 });

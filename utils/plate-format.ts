@@ -1,6 +1,6 @@
 import { PlateType } from './plate-types';
 
-export const plateFormats = {
+export const PlateFormat = {
     //Years
     [PlateType.Y1971_1973]: /^[A-Z]{1}[.][0-9]{3}[.][A-Z]{1}$/,
     [PlateType.Y1973_2008]: /^[A-Z]{3}[-][0-9]{3}$/,
