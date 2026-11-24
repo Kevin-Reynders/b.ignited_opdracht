@@ -23,21 +23,49 @@ test.describe('Belgian Numberplate Generator', () => {
         console.log(`Generated numberplate: ${generatedNumberplate}`);
     });
 
-    test('Generate multiple numberplates and check them against each other', async () => {
+    test('Generate several numberplates in a row and check them against each other', async () => {
         await expect(testdataGeneratorPage.generateAmount).toBeVisible();
 
-        const totalNumberplatesToGenerate = 10; //Number of numberplates to generate
+        const plate = testdataGeneratorPage.generatedData.locator('p');
+        const total = 5; //Number of numberplates to generate
+        const generatedNumberplates: string[] = [];
+        let previous = '';
 
-        await testdataGeneratorPage.generateAmount.fill(totalNumberplatesToGenerate.toString());
+        for (let i = 0; i < total; i++) {
+            await testdataGeneratorPage.generateNumberplate();
+
+            await expect(plate).toHaveCount(1); // Ensure only one numberplate is generated at a time
+            await expect(plate).toHaveText(/^[0-9][-][A-Z]{3}[-][0-9]{3}$/); 
+
+            if (previous) {
+                await expect(plate).not.toHaveText(previous); // Check for uniqueness against previous numberplate
+            }
+
+            const numberplate = (await plate.textContent())!.trim();
+            console.log(`Generated numberplate ${i + 1}: ${numberplate}`);
+
+            expect(generatedNumberplates).not.toContain(numberplate); // Check for uniqueness against previously generated numberplate
+            generatedNumberplates.push(numberplate);
+            previous = numberplate;
+        }
+
+    });
+
+    test('Generate multiple numberplates at once and check them against each other', async () => {
+        await expect(testdataGeneratorPage.generateAmount).toBeVisible();
+
+        const total = 10; //Number of numberplates to generate
+
+        await testdataGeneratorPage.generateAmount.fill(total.toString());
         await testdataGeneratorPage.generateNumberplate();
         await expect(testdataGeneratorPage.generatedData).toBeVisible();
 
         const generatedNumberplates = await testdataGeneratorPage.getGeneratedData();
         console.log(`Generated numberplates: ${generatedNumberplates}`);
 
-        expect(generatedNumberplates).toHaveLength(totalNumberplatesToGenerate);
+        expect(generatedNumberplates).toHaveLength(total);
 
-        for (let i = 0; i < totalNumberplatesToGenerate; i++) {
+        for (let i = 0; i < total; i++) {
             expect(generatedNumberplates[i]).not.toBeNull();
             expect(generatedNumberplates[i]).toMatch(/^[0-9][-][A-Z]{3}[-][0-9]{3}$/);
         }

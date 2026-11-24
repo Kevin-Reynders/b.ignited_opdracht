@@ -35,8 +35,8 @@ export class TestdataGeneratorPage {
 
     async openNumberplateGenerator() {
         await this.numberplateGeneratorTitle.scrollIntoViewIfNeeded();
-        //await expect(this.numberplateGeneratorTitle).toBeVisible();
         await this.numberplateGeneratorTitle.click();
+        //await expect(this.numberplateGeneratorTitle).toBeVisible();
         this.numberplateGeneratorTitle.waitFor({ state: 'visible' });
         await expect(this.numberplateGenerator).toHaveAttribute('aria-expanded', 'true');
     }
