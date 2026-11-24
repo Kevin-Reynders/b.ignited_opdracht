@@ -29,6 +29,7 @@ test.describe('Belgian Numberplate Generator Positive Scenarios', () => {
     test('Generate a valid numberplate', async () => {
         await testdataGeneratorPage.generateNumberplate();
         await expect(testdataGeneratorPage.generatedData).toBeVisible();
+        await testdataGeneratorPage.generatedData.scrollIntoViewIfNeeded();
         const generatedNumberplates = await testdataGeneratorPage.getGeneratedData();
         expect(generatedNumberplates).toHaveLength(1);
         const generatedNumberplate = generatedNumberplates[0];
@@ -79,6 +80,7 @@ test.describe('Belgian Numberplate Generator Positive Scenarios', () => {
         await testdataGeneratorPage.generateAmount.fill(total.toString());
         await testdataGeneratorPage.generateNumberplate();
         await expect(testdataGeneratorPage.generatedData).toBeVisible();
+        await testdataGeneratorPage.generatedData.scrollIntoViewIfNeeded();
 
         const generatedNumberplates = await testdataGeneratorPage.getGeneratedData();
         console.log(`Generated numberplates: ${generatedNumberplates}`);
@@ -104,6 +106,7 @@ test.describe('Belgian Numberplate Generator Positive Scenarios', () => {
         await testdataGeneratorPage.selectPlateType(PlateType.DIPLOMAT);
         await testdataGeneratorPage.generateNumberplate();
         await expect(testdataGeneratorPage.generatedData).toBeVisible();
+        await testdataGeneratorPage.generatedData.scrollIntoViewIfNeeded();
         const generatedNumberplates = await testdataGeneratorPage.getGeneratedData();
         expect(generatedNumberplates).toHaveLength(1);
         const generatedNumberplate = generatedNumberplates[0];
