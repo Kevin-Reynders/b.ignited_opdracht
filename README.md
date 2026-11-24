@@ -52,6 +52,6 @@ I want to consistently open the generator when I start my tests, but it requires
 
 Same goes for the plate-types and the plate-format, but in a different sense. Once a list contains multiple options, it's better to make sure the selecting of these items is consistent, whereas a typo can cause a failure.
 
-Negative scenario's go over the incorrect input, and the "correct" responses it needs to give when something isn't correct.
+Negative scenario's go over the incorrect input (boundary value testing), and the "correct" responses it needs to give when something isn't correct.
 Because of the negative scenario's I did find a tiny bug in the input of amount.
 As long as the number is between 1 and 100, the page says it's correct, but the amount also accepts 1.5 for example, which it interprets it as 1, always rounded down, even 1.99 = 1
