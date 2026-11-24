@@ -36,7 +36,7 @@ test.describe('Belgian Numberplate Generator Positive Scenarios', () => {
         console.log(`Generated numberplate: ${generatedNumberplate}`);
     });
 
-    test('Generate several numberplates in a row and check them against each other', async () => {
+    test('Generate several numberplates individually in a row and check them against each other', async () => {
         await expect(testdataGeneratorPage.generateAmount).toBeVisible();
 
         const plate = testdataGeneratorPage.generatedData.locator('p');
@@ -96,7 +96,7 @@ test.describe('Belgian Numberplate Generator Positive Scenarios', () => {
         expect(generatedNumberplates).toHaveLength(1);
         const generatedNumberplate = generatedNumberplates[0];
         expect(generatedNumberplate).not.toBeNull();
-        expect(generatedNumberplate).toMatch(/^[C][D][-][A-Z]{2}[0-9]{3}/);
+        expect(generatedNumberplate).toMatch(/^[C][D][-][A-Z]{2}[0-9]{3}$/);
         console.log(`Generated diplomatic numberplate: ${generatedNumberplate}`);
         });
 });

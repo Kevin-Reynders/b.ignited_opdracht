@@ -15,6 +15,7 @@ export class TestdataGeneratorPage {
     readonly automateButton: Locator;
     readonly generateButton: Locator;
     readonly generatedData: Locator;
+    readonly copyGeneratedData: Locator;
     readonly alert: Locator;
 
     constructor(page: Page) {
@@ -29,6 +30,7 @@ export class TestdataGeneratorPage {
         this.automateButton = page.locator('#plates-automate-button');
         this.generateButton = page.locator('#plates-generate-button');
         this.generatedData = page.locator('#plates-result');
+        this.copyGeneratedData = page.locator('#plates-copy');
         this.alert = page.getByRole('alert').filter({ hasText: 'Values must be between 1 and 100.' });
     }
 
@@ -40,7 +42,7 @@ export class TestdataGeneratorPage {
         await this.numberplateGeneratorTitle.scrollIntoViewIfNeeded();
         await this.numberplateGeneratorTitle.click();
         //await expect(this.numberplateGeneratorTitle).toBeVisible();
-        this.numberplateGeneratorTitle.waitFor({ state: 'visible' });
+        await this.numberplateGeneratorTitle.waitFor({ state: 'visible' });
         await expect(this.numberplateGenerator).toHaveAttribute('aria-expanded', 'true');
     }
 
