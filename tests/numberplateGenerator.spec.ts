@@ -36,6 +36,11 @@ test.describe('Belgian Numberplate Generator Positive Scenarios', () => {
         expect(generatedNumberplate).toMatch(/^[0-7][-][A-Z]{3}[-][0-9]{3}$/); // Example standard numberplate format: 1-ABC-123
         //expect(generatedNumberplate).toMatch(PlateFormat['2010-present']); Using the regex directly for now
         console.log(`Generated numberplate: ${generatedNumberplate}`);
+
+        await test.info().attach(`${test.info().title}`, {
+            body: await testdataGeneratorPage.page.screenshot({ fullPage: true }),
+            contentType: 'image/png',
+        });
     });
 
     test('Generate several numberplates individually in a row and check them against each other', async () => {
@@ -87,6 +92,11 @@ test.describe('Belgian Numberplate Generator Positive Scenarios', () => {
         // Check for uniqueness
         const uniqueNumberplates = new Set(generatedNumberplates);
         expect(uniqueNumberplates.size).toBe(generatedNumberplates.length);
+
+        await test.info().attach(`${test.info().title}`, {
+            body: await testdataGeneratorPage.page.screenshot({ fullPage: true }),
+            contentType: 'image/png',
+        });
     });
 
     test('Generate a diplomatic numberplate', async () => {
