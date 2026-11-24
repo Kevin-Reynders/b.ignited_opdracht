@@ -119,21 +119,33 @@ test.describe('Belgian Numberplate Generator Negative Scenarios', () => {
         await testdataGeneratorPage.openNumberplateGenerator();
     });
 
-    test('Show a warning when trying to generate with an invalid amount', async () => {
+    test('Show a warning when trying to generate with an out of range amounts', async () => {
         await expect(testdataGeneratorPage.generateAmount).toBeVisible();
+        const invalidAmounts = ['0', '-1', '101', '1000']; 
+        /*
+        1.5 is valid, but responds like 1, it should be rejected as it needs to be a whole natural number or given a different warning
+        */
 
-        await testdataGeneratorPage.generateAmount.fill('0'); // Invalid amount
-        await testdataGeneratorPage.automateButton.isDisabled(); // Check if the button is disabled for invalid input
-        await testdataGeneratorPage.generateButton.isDisabled();
-
-        await expect(testdataGeneratorPage.alert.filter({ hasText: 'Values must be between 1 and 100.' })).toBeVisible(); // Check if the alert is visible with the expected message
-
-        testdataGeneratorPage.generateAmount.fill('101'); // Invalid amount
-        await testdataGeneratorPage.automateButton.isDisabled();
-        await testdataGeneratorPage.generateButton.isDisabled();
-
-        await expect(testdataGeneratorPage.alert.filter({ hasText: 'Values must be between 1 and 100.' })).toBeVisible();
-        await expect(testdataGeneratorPage.alert).toHaveText('Values must be between 1 and 100.');
-
+        for (const value of invalidAmounts) {
+            await test.step(`Testing invalid amount: ${value}`, async () => {
+                await testdataGeneratorPage.generateAmount.fill(value);
+                await testdataGeneratorPage.automateButton.isDisabled();
+                await testdataGeneratorPage.generateButton.isDisabled();
+                await expect(testdataGeneratorPage.alert.filter({ hasText: 'Values must be between 1 and 100.' })).toBeVisible();
+                await expect(testdataGeneratorPage.alert).toHaveText('Values must be between 1 and 100.');
+            });
+        }
     });
+
+    test('Amount field does not accept a non-numeric value', async () => {
+        await expect(testdataGeneratorPage.generateAmount).toBeVisible();
+        const invalidInputs = ['abc', '!', '?', '@', '$', '%', '&']; //Non-numeric and special characters
+
+        for (const input of invalidInputs) {
+            await test.step(`Testing invalid input: ${input}`, async () => {
+                await expect(testdataGeneratorPage.generateAmount.fill(input)).rejects.toThrow(/Cannot type text into input\[type=number\]/); // Expect an error when trying to fill a non-numeric value
+            });
+        }
+    });
+
 });
