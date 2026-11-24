@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { PlateType } from '../utils/plate-types';
 
 export class TestdataGeneratorPage {
     readonly page: Page;
@@ -14,6 +15,7 @@ export class TestdataGeneratorPage {
     readonly automateButton: Locator;
     readonly generateButton: Locator;
     readonly generatedData: Locator;
+    readonly alert: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -27,6 +29,7 @@ export class TestdataGeneratorPage {
         this.automateButton = page.locator('#plates-automate-button');
         this.generateButton = page.locator('#plates-generate-button');
         this.generatedData = page.locator('#plates-result');
+        this.alert = page.getByRole('alert').filter({ hasText: 'Values must be between 1 and 100.' });
     }
 
     async goto() {
@@ -47,5 +50,10 @@ export class TestdataGeneratorPage {
 
     async getGeneratedData(): Promise<string[]> {
         return await this.generatedData.locator('p').allTextContents();
+    }
+
+    async selectPlateType(type: PlateType) {
+        await this.generateDealer.click();
+        await this.page.getByRole('option', { name: type }).click();
     }
 }

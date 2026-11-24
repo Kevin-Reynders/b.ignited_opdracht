@@ -1,7 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { TestdataGeneratorPage } from '../pages/TestdataGeneratorPage';
+import { plateTypes } from '../utils/plate-types';
 
-test.describe('Belgian Numberplate Generator', () => {
+test.describe('Belgian Numberplate Generator Positive Scenarios', () => {
     let testdataGeneratorPage: TestdataGeneratorPage;
 
     test.beforeEach(async ({ page }) => {
@@ -11,8 +12,20 @@ test.describe('Belgian Numberplate Generator', () => {
     });
 
     //The tests below expect the numberplate generator to expect the current format of numberplate, so not selecting a dealer
-    test('Generate a valid numberplate', async () => {
+    test('Check if the description is visible and toggleable', async () => {
         await expect(testdataGeneratorPage.numberplateGeneratorDescriptionSmall).toBeVisible();
+        await expect(testdataGeneratorPage.numberplateGeneratorDescriptionLarge).toBeHidden();
+        await expect(testdataGeneratorPage.numberplateGeneratorDescriptionSmall).toHaveText('This action returns Belgian license plates.');
+        testdataGeneratorPage.numberplateGeneratorDescriptionReadMoreOrLess.click();
+        await expect(testdataGeneratorPage.numberplateGeneratorDescriptionSmall).toBeVisible();
+        await expect(testdataGeneratorPage.numberplateGeneratorDescriptionLarge).toBeVisible();
+        await expect(testdataGeneratorPage.numberplateGeneratorDescriptionLarge).toContainText('The Belgian License Plate generator');
+        testdataGeneratorPage.numberplateGeneratorDescriptionReadMoreOrLess.click();
+        await expect(testdataGeneratorPage.numberplateGeneratorDescriptionSmall).toBeVisible();
+        await expect(testdataGeneratorPage.numberplateGeneratorDescriptionLarge).toBeHidden();
+    });
+    
+    test('Generate a valid numberplate', async () => {
         await testdataGeneratorPage.generateNumberplate();
         await expect(testdataGeneratorPage.generatedData).toBeVisible();
         const generatedNumberplates = await testdataGeneratorPage.getGeneratedData();
@@ -74,12 +87,50 @@ test.describe('Belgian Numberplate Generator', () => {
         expect(uniqueNumberplates.size).toBe(generatedNumberplates.length);
     });
 
+    test('Generate a diplomatic numberplate', async () => {
+        await expect(testdataGeneratorPage.generateDealer).toBeVisible();
+        await testdataGeneratorPage.selectPlateType(plateTypes.DIPLOMAT);
+        await testdataGeneratorPage.generateNumberplate();
+        await expect(testdataGeneratorPage.generatedData).toBeVisible();
+        const generatedNumberplates = await testdataGeneratorPage.getGeneratedData();
+        expect(generatedNumberplates).toHaveLength(1);
+        const generatedNumberplate = generatedNumberplates[0];
+        expect(generatedNumberplate).not.toBeNull();
+        expect(generatedNumberplate).toMatch(/^[C][D][-][A-Z]{2}[0-9]{3}/);
+        console.log(`Generated diplomatic numberplate: ${generatedNumberplate}`);
+        });
+});
 
-
-    /*
+/*
     Welke testen moeten er nog bijkomen?
         Checken of de verwachte generator ook fatsoenlijk er staat (knoppen, textboxen, etc.)
         Verschillende formaten (oude nummerplaat, speciale nummerplaat, etc.)
     */
 
+test.describe('Belgian Numberplate Generator Negative Scenarios', () => {
+    let testdataGeneratorPage: TestdataGeneratorPage;
+
+    test.beforeEach(async ({ page }) => {
+        testdataGeneratorPage = new TestdataGeneratorPage(page);
+        await testdataGeneratorPage.goto();
+        await testdataGeneratorPage.openNumberplateGenerator();
+    });
+
+    test('Show a warning when trying to generate with an invalid amount', async () => {
+        await expect(testdataGeneratorPage.generateAmount).toBeVisible();
+
+        await testdataGeneratorPage.generateAmount.fill('0'); // Invalid amount
+        await testdataGeneratorPage.automateButton.isDisabled(); // Check if the button is disabled for invalid input
+        await testdataGeneratorPage.generateButton.isDisabled();
+
+        await expect(testdataGeneratorPage.alert.filter({ hasText: 'Values must be between 1 and 100.' })).toBeVisible(); // Check if the alert is visible with the expected message
+
+        testdataGeneratorPage.generateAmount.fill('101'); // Invalid amount
+        await testdataGeneratorPage.automateButton.isDisabled();
+        await testdataGeneratorPage.generateButton.isDisabled();
+
+        await expect(testdataGeneratorPage.alert.filter({ hasText: 'Values must be between 1 and 100.' })).toBeVisible();
+        await expect(testdataGeneratorPage.alert).toHaveText('Values must be between 1 and 100.');
+
+    });
 });
